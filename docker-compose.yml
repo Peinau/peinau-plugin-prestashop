@@ -1,0 +1,17 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    environment:
+      - DB_SERVER=quickpay_mysql
+    volumes:
+    - .:/var/www/html/modules/peinau
+  mysql:
+    image: mysql
+    container_name: quickpay_mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
