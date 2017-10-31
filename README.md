@@ -15,7 +15,7 @@ Descarga la [última versión del plugin desde acá](https://github.com/peinau/p
 
 Para instalar, hay dos opciones:
 
-- Descarga la [última versión del plugin](https://github.com/peinau/peinau-plugin-prestashop/releases/latest), y en el backoffice de Prestashop ve a Módulos y presiona el botón ```Subir un módulo```.
+- Subir el .zip descargado a través del Backoffice de Prestashop. Hay que dirigirse a Módulos, presionar el botón ```Subir un módulo```, y seleccionar el plugin descargado.
 - Deja el plugin descomprimido en la carpeta ```modules/peinau```, dentro de la carpeta donde tienes instalado Prestashop.
 
 Luego, busca el módulo en la opción "Módulos" del backoffice, bajo el nombre de "Peinau", y haz click en el botón "Instalar".
