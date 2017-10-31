@@ -1,28 +1,26 @@
 <?php
 /**
-* 2007-2017 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2017 PrestaShop SA
-*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+ * MIT License
+ * Copyright (c) 2017 Peinau
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -52,10 +50,6 @@ class Peinau extends PaymentModule
         $this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
     }
 
-    /**
-     * Don't forget to create update methods if needed:
-     * http://doc.prestashop.com/display/PS16/Enabling+the+Auto-Update
-     */
     public function install()
     {
         if (extension_loaded('curl') == false)
@@ -69,8 +63,6 @@ class Peinau extends PaymentModule
         Configuration::updateValue("PEINAU_PAYMENT_CMR", 1);
         Configuration::updateValue("PEINAU_PAYMENT_CC", 1);
         Configuration::updateValue("PEINAU_PAYMENT_WEBPAY", 1);
-
-        //include(dirname(__FILE__).'/sql/install.php');
 
         return parent::install() &&
             $this->registerHook('header') &&
@@ -91,19 +83,11 @@ class Peinau extends PaymentModule
         Configuration::deleteByName('PEINAU_CC_ENDPOINT_URL');
         Configuration::deleteByName('PEINAU_CH_ENDPOINT_URL');
 
-        //include(dirname(__FILE__).'/sql/uninstall.php');
-
         return parent::uninstall();
     }
 
-    /**
-     * Load the configuration form
-     */
     public function getContent()
     {
-        /**
-         * If values have been submitted in the form, process.
-         */
         if (((bool)Tools::isSubmit('submitPeinauModule')) == true) {
             $this->postProcess();
         }
@@ -115,9 +99,6 @@ class Peinau extends PaymentModule
         return $output.$this->renderForm();
     }
 
-    /**
-     * Create the form that will be displayed in the configuration of your module.
-     */
     protected function renderForm()
     {
         $helper = new HelperForm();
@@ -143,9 +124,6 @@ class Peinau extends PaymentModule
         return $helper->generateForm(array($this->getConfigForm()));
     }
 
-    /**
-     * Create the structure of your form.
-     */
     protected function getConfigForm()
     {
         return array(
@@ -265,9 +243,6 @@ class Peinau extends PaymentModule
         );
     }
 
-    /**
-     * Set values for the inputs.
-     */
     protected function getConfigFormValues()
     {
         PrestaShopLogger::addLog("? PEINAU_PAYMENT_CMR : ". Configuration::get('PEINAU_PAYMENT_CMR', 1));
@@ -285,9 +260,6 @@ class Peinau extends PaymentModule
         );
     }
 
-    /**
-     * Save form data.
-     */
     protected function postProcess()
     {
         $form_values = $this->getConfigFormValues();
@@ -298,9 +270,6 @@ class Peinau extends PaymentModule
         }
     }
 
-    /**
-    * Add the CSS & JavaScript files you want to be loaded in the BO.
-    */
     public function hookBackOfficeHeader()
     {
         if (Tools::getValue('module_name') == $this->name) {
@@ -309,19 +278,12 @@ class Peinau extends PaymentModule
         }
     }
 
-    /**
-     * Add the CSS & JavaScript files you want to be added on the FO.
-     */
     public function hookHeader()
     {
         $this->context->controller->addJS($this->_path.'/views/js/front.js');
         $this->context->controller->addCSS($this->_path.'/views/css/front.css');
     }
 
-    /**
-     * This method is used to render the payment button,
-     * Take care if the button should be displayed or not.
-     */
     public function hookPayment($params)
     {
         $currency_id = $params['cart']->id_currency;
@@ -337,9 +299,6 @@ class Peinau extends PaymentModule
         return $this->display(__FILE__, 'views/templates/hook/payment.tpl');
     }
 
-    /**
-     * This hook is used to display the order confirmation page.
-     */
     public function hookPaymentReturn($params)
     {
         if ($this->active == false)
