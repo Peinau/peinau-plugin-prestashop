@@ -1,9 +1,11 @@
 version: '3'
 services:
   web:
-    build: .
+    image: "prestashop/prestashop:${PRESTASHOP_VERSION:-1.6}"
+    container_name: "quickpay_prestashop_${PRESTASHOP_VERSION:-1.6}"
+    env_file: .env
     ports:
-      - "8080:80"
+      - "8000:80"
     depends_on:
       - mysql
     environment:

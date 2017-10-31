@@ -1,0 +1,31 @@
+version: '3'
+services:
+  web16:
+    image: "prestashop/prestashop:1.6"
+    container_name: "quickpay_prestashop_1_6"
+    env_file: .env16
+    ports:
+      - "8016:80"
+    depends_on:
+      - mysql
+    environment:
+      - DB_SERVER=quickpay_mysql
+    volumes:
+    - .:/var/www/html/modules/peinau
+  web17:
+    image: "prestashop/prestashop:1.7"
+    container_name: "quickpay_prestashop_1_7"
+    env_file: .env17
+    ports:
+      - "8017:80"
+    depends_on:
+      - mysql
+    environment:
+      - DB_SERVER=quickpay_mysql
+    volumes:
+    - .:/var/www/html/modules/peinau
+  mysql:
+    image: mysql
+    container_name: quickpay_mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
