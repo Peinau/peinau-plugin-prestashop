@@ -1,19 +1,19 @@
 version: '3'
 services:
   web:
-    image: "prestashop/prestashop:${PRESTASHOP_VERSION:-1.6}"
-    container_name: "quickpay_prestashop_${PRESTASHOP_VERSION:-1.6}"
+    image: "prestashop/prestashop:1.7"
+    container_name: "peinau_prestashop_1_7"
     env_file: .env
     ports:
       - "8000:80"
     depends_on:
       - mysql
     environment:
-      - DB_SERVER=quickpay_mysql
+      - DB_SERVER=peinau_mysql
     volumes:
     - .:/var/www/html/modules/peinau
   mysql:
     image: mysql
-    container_name: quickpay_mysql
+    container_name: peinau_mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-admin}
