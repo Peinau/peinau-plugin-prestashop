@@ -33,6 +33,15 @@ class PeinauAPI
         return $this->sendByCURL($endpoint, "grant_type=client_credentials", $headers);
     }
 
+    public function getWithToken($url, $access_token) {
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer '.$access_token
+        );
+
+        return $this->sendByCURL($url, null, $headers);
+    }
+
     public function paymentIntent($url, $access_token, $transaction_detail) {
         $headers = array(
             'Content-Type: application/json',

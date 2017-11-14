@@ -30,7 +30,7 @@ class PeinauConfirmationModuleFrontController extends ModuleFrontController
         $self_url = Context::getContext()->cookie->selfurl;
         PrestaShopLogger::addLog($self_url);
         $peinauapi = new PeinauAPI();
-        $response = $peinauapi->sendByCURL($self_url, null, null);
+        $response = $peinauapi->getWithToken($self_url, Context::getContext()->cookie->access_token);
 
         $jsonRIntent = Tools::jsonDecode($response);
 
