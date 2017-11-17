@@ -63,6 +63,7 @@ class Peinau extends PaymentModule
         Configuration::updateValue("PEINAU_PAYMENT_CMR", 1);
         Configuration::updateValue("PEINAU_PAYMENT_CC", 1);
         Configuration::updateValue("PEINAU_PAYMENT_WEBPAY", 1);
+        Configuration::updateValue("PEINAU_DEBUG_MODE", 1);
 
         return parent::install() &&
             $this->registerHook('header') &&
@@ -234,7 +235,28 @@ class Peinau extends PaymentModule
                             )
                           ),
                         'label' => $this->l('Should WebPay Payment be active?'),
+                        ),
+                    array(
+                        'type' => 'radio',
+                        'is_bool' => true,
+                        'desc' => $this->l('Debug Mode'),
+                        'name' => 'PEINAU_DEBUG_MODE',
+                        'values' => array(
+                            array(
+                                'id' => 'active_on',
+                                'value' => 1,
+                                'label' => $this->l('Enabled')
+                            ),
+                            array(
+                                'id' => 'active_off',
+                                'value' => 0,
+                                'label' => $this->l('Disabled')
+                            )
+                            ),
+                        'label' => $this->l('Enable if you want to see the requests in the log'),
                     )
+
+
                 ),
                 'submit' => array(
                     'title' => $this->l('Save'),
@@ -245,7 +267,6 @@ class Peinau extends PaymentModule
 
     protected function getConfigFormValues()
     {
-        PrestaShopLogger::addLog("? PEINAU_PAYMENT_CMR : ". Configuration::get('PEINAU_PAYMENT_CMR', 1));
 
         return array(
             'PEINAU_SSO_ENDPOINT_URL' => Configuration::get('PEINAU_SSO_ENDPOINT_URL'),
@@ -255,6 +276,8 @@ class Peinau extends PaymentModule
             'PEINAU_PAYMENT_CMR' => Configuration::get('PEINAU_PAYMENT_CMR'),
             'PEINAU_PAYMENT_CC' => Configuration::get('PEINAU_PAYMENT_CC'),
             'PEINAU_PAYMENT_WEBPAY' => Configuration::get('PEINAU_PAYMENT_WEBPAY'),
+            'PEINAU_DEBUG_MODE' => Configuration::get('PEINAU_DEBUG_MODE'),
+
             'PEINAU_IDENTIFIER' => Configuration::get('PEINAU_IDENTIFIER'),
             'PEINAU_SECRET_KEY' => Configuration::get('PEINAU_SECRET_KEY'),
         );

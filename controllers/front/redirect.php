@@ -48,6 +48,10 @@ class PeinauRedirectModuleFrontController extends ModuleFrontController
                 return $this->displayError('An error occurred while trying to make the payment');
             }
 
+            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+                PrestaShopLogger::addLog("access token resp: " . $response);
+            }
+
             $jsonRToken = Tools::jsonDecode($response);
 
             $access_token = $jsonRToken->access_token;
@@ -70,10 +74,18 @@ class PeinauRedirectModuleFrontController extends ModuleFrontController
 
             $transaction_detail = PeinauAPI::createTransactionReq($cart, $payment_method);
 
+            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+                PrestaShopLogger::addLog("intent req: " . $transaction_detail);
+            }
+
             $response = $peinauapi->paymentIntent(Configuration::get("PEINAU_CH_ENDPOINT_URL"), $access_token, $transaction_detail);
 
             if ($response == null) {
                 return $this->displayError('An error occurred while trying to make the payment');
+            }
+
+            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+                PrestaShopLogger::addLog("intent resp: " . $response);
             }
 
             $jsonRIntent = Tools::jsonDecode($response);
@@ -83,6 +95,11 @@ class PeinauRedirectModuleFrontController extends ModuleFrontController
             }
 
             Context::getContext()->cookie->__set('selfurl', $jsonRIntent->links[0]->href);
+
+            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+                PrestaShopLogger::addLog("Redirected to : " . $jsonRIntent->links[1]->href);
+            }
+
             Tools::redirect($jsonRIntent->links[1]->href);
             return $this->displayError('An error occurred while trying to make the payment');
         }

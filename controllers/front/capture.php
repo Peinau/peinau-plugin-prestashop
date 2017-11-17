@@ -42,8 +42,13 @@ class PeinauCaptureModuleFrontController extends ModuleFrontController
             $peinauapi = new PeinauAPI();
             $response = $peinauapi->getAccessToken(Configuration::get("PEINAU_SSO_ENDPOINT_URL"), Configuration::get("PEINAU_IDENTIFIER"), Configuration::get("PEINAU_SECRET_KEY"));
 
+
             if ($response == null) {
                 return $this->displayError('An error occurred while trying to make the payment');
+            }
+
+            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+                PrestaShopLogger::addLog("access token resp: " . $response);
             }
 
             $jsonRToken = Tools::jsonDecode($response);
@@ -59,12 +64,25 @@ class PeinauCaptureModuleFrontController extends ModuleFrontController
 
             $transaction_detail = PeinauAPI::createCaptureReq($cart);
 
+            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+                PrestaShopLogger::addLog("Capture card req: " . $transaction_detail);
+            }
+
             $response = $peinauapi->captureIntent(Configuration::get("PEINAU_CC_ENDPOINT_URL"), $access_token, $transaction_detail);
+
+            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+                PrestaShopLogger::addLog("Capture card resp: " . $response);
+            }
 
             $jsonRIntent = Tools::jsonDecode($response);
 
             Context::getContext()->cookie->__set('selfurl', $jsonRIntent->links[0]->href);
             Tools::redirect($jsonRIntent->links[1]->href);
+
+            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+                PrestaShopLogger::addLog("Redirected to : " . $jsonRIntent->links[1]->href);
+            }
+
             return $this->displayError('An error occurred while trying to make the payment');
         }
     }

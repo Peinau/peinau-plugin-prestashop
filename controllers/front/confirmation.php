@@ -32,9 +32,11 @@ class PeinauConfirmationModuleFrontController extends ModuleFrontController
         $peinauapi = new PeinauAPI();
         $response = $peinauapi->getWithToken($self_url, Context::getContext()->cookie->access_token);
 
-        $jsonRIntent = Tools::jsonDecode($response);
+        if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+            PrestaShopLogger::addLog("self url resp: " . $response);
+        }
 
-        PrestaShopLogger::addLog($response);
+        $jsonRIntent = Tools::jsonDecode($response);
 
         if ($jsonRIntent->state == "canceled") {
             return $this->displayError('El pago ha sido anulado');
@@ -85,14 +87,23 @@ class PeinauConfirmationModuleFrontController extends ModuleFrontController
             $cart = Context::getContext()->cart;
 
             $transaction_detail = PeinauAPI::createTransactionReq($cart, "QUICKPAY_TOKEN", $jsonRIntent->id);
-            PrestaShopLogger::addLog($transaction_detail);
+            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+                PrestaShopLogger::addLog("Intent req : " . $transaction_detail);
+            }
 
             $response = $peinauapi->paymentIntent(Configuration::get("PEINAU_CH_ENDPOINT_URL"), $access_token, $transaction_detail);
 
-            PrestaShopLogger::addLog($response);
+            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+                PrestaShopLogger::addLog("Intent resp : " . $response);
+            }
+
             $jsonRIntent = Tools::jsonDecode($response);
 
             Context::getContext()->cookie->__set('selfurl', $jsonRIntent->links[0]->href);
+
+            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+                PrestaShopLogger::addLog("Redirect to : " . $jsonRIntent->links[1]->href);
+            }
             Tools::redirect($jsonRIntent->links[1]->href);
         }
     }
