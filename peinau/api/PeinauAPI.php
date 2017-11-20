@@ -136,10 +136,10 @@ class PeinauAPI
         $string_products = "";
         foreach($products as $product) {
             $item = '{
-                "thumbnail":"//'.(new Link())->getImageLink($product['link_rewrite'],$product['id_image'], 'small_default').'",
+                "thumbnail": "//'.(new Link())->getImageLink($product['link_rewrite'],$product['id_image'], 'small_default').'",
                 "sku": "'.($product['reference'] ? $product['reference'] : "0").'",
                 "name": "'.strval($product['name']).'",
-                "description": "'.($product['description_short'] ? strval($product['description_short']) : strval($product['name'])).'",
+                "description": "'.($product['description_short'] ? strval(strip_tags($product['description_short'])) : strval($product['name'])).'",
                 "quantity": '.strval($product['cart_quantity']).',
                 "price": '.strval($product['price']).',
                 "tax": '.strval($product['price_wt'] - $product['price']).'
