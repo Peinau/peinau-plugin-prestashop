@@ -2,7 +2,7 @@
 
 Plugin (o módulo) de Prestashop, para aceptar pagos a través de Peinau.
 
-![Screenshot de pagos](views/img/screenshot.png)
+![Screenshot de pagos](peinau/views/img/screenshot.png)
 
 ## Uso
 ### Requisitos
