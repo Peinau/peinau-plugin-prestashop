@@ -76,7 +76,7 @@ docker-compose-dev.yml levantará dos contenedores de Prestashop, v1.6 y v1.7
 * URL Backoffice PS v1.7: http://localhost:8017/adminpn
 * Usuario Backoffice: peinau@peinau.com - Clave: peinau
 
-### Producción
+### Producción
 
 La variable de entorno ```MYSQL_ROOT_PASSWORD``` debe especificar la clave que tendrá el usuario Root de MySQL. Se sugiere crear una que no sea no intuitiva. Y en caso de que no se especifique, por defecto la clave será _admin_.
 
