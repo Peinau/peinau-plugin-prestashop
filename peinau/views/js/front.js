@@ -20,6 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-if (document.URL.search("#") != -1){
+/*if (document.URL.search("#") != -1){
     window.location.href = document.URL.replace("#","&");
-};
+};*/

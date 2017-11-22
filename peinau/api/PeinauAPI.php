@@ -49,6 +49,7 @@ class PeinauAPI
         );
 
         $endpoint = $url."/payments";
+
         return $this->sendByCURL($endpoint, $transaction_detail, $headers);
     }
 
@@ -115,7 +116,7 @@ class PeinauAPI
             },
             "redirect_urls": {
             "return_url": "'.Context::getContext()->link->getModuleLink('peinau','confirmation').'",
-            "cancel_url": "'.Context::getContext()->link->getPageLink('order', null, null, 'step=3').'"
+            "cancel_url": "'.Context::getContext()->link->getModuleLink('peinau','error').'"
             }
         }';
 
@@ -194,7 +195,7 @@ class PeinauAPI
             },
             "redirect_urls": {
                 "return_url": "'.Context::getContext()->link->getModuleLink('peinau','confirmation').'",
-                "cancel_url": "'.Context::getContext()->link->getPageLink('order', null, null, 'step=3').'"
+                "cancel_url": "'.Context::getContext()->link->getModuleLink('peinau','error').'"
             }
         }';
 
