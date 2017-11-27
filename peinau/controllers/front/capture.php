@@ -59,6 +59,7 @@ class PeinauCaptureModuleFrontController extends ModuleFrontController
             }
 
             Context::getContext()->cookie->__set('access_token', $access_token);
+            Context::getContext()->cookie->__set('access_token_exp', $jsonRToken->expires_in);
 
             $cart = Context::getContext()->cart;
 

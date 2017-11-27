@@ -29,7 +29,39 @@ class PeinauConfirmationModuleFrontController extends ModuleFrontController
 
         $self_url = Context::getContext()->cookie->selfurl;
         PrestaShopLogger::addLog($self_url);
+
+        $access_token = Context::getContext()->cookie->access_token;
+        $access_token_exp = Context::getContext()->cookie->access_token_exp;
+
         $peinauapi = new PeinauAPI();
+        if ($access_token_exp - time() <= 10) {
+
+            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+                PrestaShopLogger::addLog("ACCESS TOKEN EXPIRED!");
+            }
+
+            $response = $peinauapi->getAccessToken(Configuration::get("PEINAU_ENDPOINT_URL"), Configuration::get("PEINAU_IDENTIFIER"), Configuration::get("PEINAU_SECRET_KEY"));
+
+            if ($response == null) {
+                return $this->displayError('An error occurred while trying to make the payment');
+            }
+
+            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+                PrestaShopLogger::addLog("access token resp: " . $response);
+            }
+
+            $jsonRToken = Tools::jsonDecode($response);
+
+            $access_token = $jsonRToken->access_token;
+
+            if ($access_token == null) {
+                return $this->displayError('An error occurred while trying to redirect the customer');
+            }
+
+            Context::getContext()->cookie->__set('access_token', $access_token);
+            Context::getContext()->cookie->__set('access_token_exp', $jsonRToken->expires_in);
+        }
+
         $response = $peinauapi->getWithToken($self_url, Context::getContext()->cookie->access_token);
 
         if (Configuration::get("PEINAU_DEBUG_MODE") == true) {

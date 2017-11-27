@@ -60,6 +60,9 @@ class PeinauRedirectModuleFrontController extends ModuleFrontController
                 return $this->displayError('An error occurred while trying to redirect the customer');
             }
 
+            Context::getContext()->cookie->__set('access_token', $access_token);
+            Context::getContext()->cookie->__set('access_token_exp', $jsonRToken->expires_in);
+
             $cart = Context::getContext()->cart;
 
             $payment_method_attr = Tools::getValue('payment_method');
