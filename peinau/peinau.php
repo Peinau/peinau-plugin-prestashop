@@ -35,7 +35,7 @@ class Peinau extends PaymentModule
     {
         $this->name = 'peinau';
         $this->tab = 'payments_gateways';
-        $this->version = '1.0.0-beta.4';
+        $this->version = '1.0.0-beta.5';
         $this->author = 'Peinau';
         $this->need_instance = 1;
         $this->bootstrap = true;
