@@ -40,7 +40,7 @@ class PeinauCaptureModuleFrontController extends ModuleFrontController
             ));
 
             $peinauapi = new PeinauAPI();
-            $response = $peinauapi->getAccessToken(Configuration::get("PEINAU_SSO_ENDPOINT_URL"), Configuration::get("PEINAU_IDENTIFIER"), Configuration::get("PEINAU_SECRET_KEY"));
+            $response = $peinauapi->getAccessToken(Configuration::get("PEINAU_ENDPOINT_URL"), Configuration::get("PEINAU_IDENTIFIER"), Configuration::get("PEINAU_SECRET_KEY"));
 
 
             if ($response == null) {
@@ -68,7 +68,7 @@ class PeinauCaptureModuleFrontController extends ModuleFrontController
                 PrestaShopLogger::addLog("Capture card req: " . $transaction_detail);
             }
 
-            $response = $peinauapi->captureIntent(Configuration::get("PEINAU_CC_ENDPOINT_URL"), $access_token, $transaction_detail);
+            $response = $peinauapi->captureIntent(Configuration::get("PEINAU_ENDPOINT_URL"), $access_token, $transaction_detail);
 
             if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
                 PrestaShopLogger::addLog("Capture card resp: " . $response);

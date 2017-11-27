@@ -42,7 +42,7 @@ class PeinauRedirectModuleFrontController extends ModuleFrontController
             ));
 
             $peinauapi = new PeinauAPI();
-            $response = $peinauapi->getAccessToken(Configuration::get("PEINAU_SSO_ENDPOINT_URL"), Configuration::get("PEINAU_IDENTIFIER"), Configuration::get("PEINAU_SECRET_KEY"));
+            $response = $peinauapi->getAccessToken(Configuration::get("PEINAU_ENDPOINT_URL"), Configuration::get("PEINAU_IDENTIFIER"), Configuration::get("PEINAU_SECRET_KEY"));
 
             if ($response == null) {
                 return $this->displayError('An error occurred while trying to make the payment');
@@ -78,7 +78,7 @@ class PeinauRedirectModuleFrontController extends ModuleFrontController
                 PrestaShopLogger::addLog("intent req: " . $transaction_detail);
             }
 
-            $response = $peinauapi->paymentIntent(Configuration::get("PEINAU_CH_ENDPOINT_URL"), $access_token, $transaction_detail);
+            $response = $peinauapi->paymentIntent(Configuration::get("PEINAU_ENDPOINT_URL"), $access_token, $transaction_detail);
 
             if ($response == null) {
                 return $this->displayError('An error occurred while trying to make the payment');

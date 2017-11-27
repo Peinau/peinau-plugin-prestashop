@@ -91,7 +91,7 @@ class PeinauConfirmationModuleFrontController extends ModuleFrontController
                 PrestaShopLogger::addLog("Intent req : " . $transaction_detail);
             }
 
-            $response = $peinauapi->paymentIntent(Configuration::get("PEINAU_CH_ENDPOINT_URL"), $access_token, $transaction_detail);
+            $response = $peinauapi->paymentIntent(Configuration::get("PEINAU_ENDPOINT_URL"), $access_token, $transaction_detail);
 
             if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
                 PrestaShopLogger::addLog("Intent resp : " . $response);

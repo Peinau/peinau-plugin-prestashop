@@ -64,6 +64,8 @@ class Peinau extends PaymentModule
         Configuration::updateValue("PEINAU_PAYMENT_CC", 1);
         Configuration::updateValue("PEINAU_PAYMENT_WEBPAY", 1);
         Configuration::updateValue("PEINAU_DEBUG_MODE", 1);
+        Configuration::updateValue("PEINAU_ENDPOINT_URL", 1);
+
 
         return parent::install() &&
             $this->registerHook('header') &&
@@ -80,9 +82,7 @@ class Peinau extends PaymentModule
         Configuration::deleteByName('PEINAU_PAYMENT_CMR');
         Configuration::deleteByName('PEINAU_PAYMENT_CC');
         Configuration::deleteByName('PEINAU_PAYMENT_WEBPAY');
-        Configuration::deleteByName('PEINAU_SSO_ENDPOINT_URL');
-        Configuration::deleteByName('PEINAU_CC_ENDPOINT_URL');
-        Configuration::deleteByName('PEINAU_CH_ENDPOINT_URL');
+        Configuration::deleteByName('PEINAU_ENDPOINT_URL');
 
         return parent::uninstall();
     }
@@ -127,6 +127,17 @@ class Peinau extends PaymentModule
 
     protected function getConfigForm()
     {
+        $options = array(
+            array(
+              'id_option' => 0,
+              'name' => $this->l('Sandbox')
+            ),
+            array(
+              'id_option' => 1,
+              'name' => $this->l('Production')
+            ),
+          );
+
         return array(
             'form' => array(
                 'legend' => array(
@@ -154,30 +165,17 @@ class Peinau extends PaymentModule
                     ),
                     array(
                         'col' => 5,
-                        'type' => 'text',
+                        'type' => 'select',
                         'required' => true,
                         'prefix' => '<i class="icon icon-cloud"></i>',
-                        'desc' => $this->l('Enter the ENDPOINT of the Peinau environment'),
-                        'name' => 'PEINAU_SSO_ENDPOINT_URL',
-                        'label' => $this->l('SSO Endpoint URL (Ex.: https://api-sso-quickpay.azurewebsites.net)'),
-                    ),
-                    array(
-                        'col' => 5,
-                        'type' => 'text',
-                        'required' => true,
-                        'prefix' => '<i class="icon icon-cloud"></i>',
-                        'desc' => $this->l('Enter the ENDPOINT of the Peinau environment'),
-                        'name' => 'PEINAU_CH_ENDPOINT_URL',
-                        'label' => $this->l('Checkout Endpoint URL (Ex.: https://api-checkout-quickpay.azurewebsites.net)'),
-                    ),
-                    array(
-                        'col' => 5,
-                        'type' => 'text',
-                        'required' => true,
-                        'prefix' => '<i class="icon icon-cloud"></i>',
-                        'desc' => $this->l('Enter the ENDPOINT of the Peinau environment'),
-                        'name' => 'PEINAU_CC_ENDPOINT_URL',
-                        'label' => $this->l('Capture Card Endpoint URL (Ex.: https://api-capture-card-quickpay.azurewebsites.net)'),
+                        'desc' => $this->l('Select the ENDPOINT of the Peinau environment'),
+                        'name' => 'PEINAU_ENDPOINT_URL',
+                        'label' => $this->l('Endpoint'),
+                        'options' => array(
+                            'query' => $options,
+                            'id' => 'id_option',
+                            'name' => 'name'
+                          )
                     ),
                     array(
                         'type' => 'radio',
@@ -269,9 +267,7 @@ class Peinau extends PaymentModule
     {
 
         return array(
-            'PEINAU_SSO_ENDPOINT_URL' => Configuration::get('PEINAU_SSO_ENDPOINT_URL'),
-            'PEINAU_CC_ENDPOINT_URL' => Configuration::get('PEINAU_CC_ENDPOINT_URL'),
-            'PEINAU_CH_ENDPOINT_URL' => Configuration::get('PEINAU_CH_ENDPOINT_URL'),
+            'PEINAU_ENDPOINT_URL' => Configuration::get('PEINAU_ENDPOINT_URL'),
 
             'PEINAU_PAYMENT_CMR' => Configuration::get('PEINAU_PAYMENT_CMR'),
             'PEINAU_PAYMENT_CC' => Configuration::get('PEINAU_PAYMENT_CC'),

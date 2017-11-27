@@ -24,12 +24,51 @@
 
 class PeinauAPI
 {
-    public function getAccessToken($url, $client_id, $client_secret) {
+    const Sandbox = 0;
+    const Production = 1;
+
+    public function getSSOUrl($id_type){
+        if ($id_type > 1)
+            $id_type = 0;
+
+        $url_array = array(
+            0 => "https://api.sandbox.connect.fif.tech/sso",
+            1 => "https://api.prod.connect.fif.tech/sso",
+        );
+
+        return $url_array[$id_type];
+    }
+
+    public function getCheckoutUrl($id_type){
+        if ($id_type > 1)
+            $id_type = 0;
+
+        $url_array = array(
+            0 => "https://api.sandbox.connect.fif.tech/checkout",
+            1 => "https://api.prod.connect.fif.tech/checkout",
+        );
+
+        return $url_array[$id_type];
+    }
+
+    public function getCaptureUrl($id_type){
+        if ($id_type > 1)
+            $id_type = 0;
+
+        $url_array = array(
+            0 => "https://api.sandbox.connect.fif.tech/tokenization",
+            1 => "https://api.prod.connect.fif.tech/tokenization",
+        );
+
+        return $url_array[$id_type];
+    }
+
+    public function getAccessToken($id_type, $client_id, $client_secret) {
         $headers = array(
             'Content-Type: application/x-www-form-urlencoded',
             'Authorization: Basic '.$client_id.':'.$client_secret,
         );
-        $endpoint = $url."/oauth2/v2/token";
+        $endpoint = $this->getSSOUrl($id_type)."/oauth2/v2/token";
         return $this->sendByCURL($endpoint, "grant_type=client_credentials", $headers);
     }
 
@@ -42,24 +81,24 @@ class PeinauAPI
         return $this->sendByCURL($url, null, $headers);
     }
 
-    public function paymentIntent($url, $access_token, $transaction_detail) {
+    public function paymentIntent($id_type, $access_token, $transaction_detail) {
         $headers = array(
             'Content-Type: application/json',
             'Authorization: Bearer '.$access_token
         );
 
-        $endpoint = $url."/payments";
+        $endpoint = $this->getCheckoutUrl($id_type)."/payments";
 
         return $this->sendByCURL($endpoint, $transaction_detail, $headers);
     }
 
-    public function captureIntent($url, $access_token, $transaction_detail) {
+    public function captureIntent($id_type, $access_token, $transaction_detail) {
         $headers = array(
             'Content-Type: application/json',
             'Authorization: Bearer '.$access_token
         );
 
-        $endpoint = $url."/captures";
+        $endpoint = $this->getCaptureUrl($id_type)."/captures";
         return $this->sendByCURL($endpoint, $transaction_detail, $headers);
     }
 

@@ -32,15 +32,9 @@ Antes de ocupar el módulo, debes configurar lo esencial para que funcione corre
 - Llave secreta:
 	- Descripción: Alfanumérico que permite autorizar el acceso a la API de Peinau.
 	- _Ejemplo: a65xoHzQ1QlE5R65IO9C0WzzuWDmwEXqFOUqw8LfINrN_
-- URL Endpoint SSO:
-	- Descripción: URL de autorización-
-	- _Ejemplo: https://quickpay-connect-sso.azurewebsites.net_
-- URL Endpoint Checkout:
-	- Descripción: URL para realizar intención de pago.
-	- _Ejemplo: https://quickpay-connect-checkout.azurewebsites.net_
-- URL Endpoint Capture Card: 
-	- Descripción: URL para capturar tarjetas de crédito.
-	- _Ejemplo: https://quickpay-connect-capture-card.azurewebsites.net_
+- Endpoint:
+	- Descripción: URL hacia donde apuntará el plugin-
+	- _Ejemplo: Sandbox_
 
 #### Medios de pago disponibles
 
