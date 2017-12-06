@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
-    <name>peinau</name>
-    <displayName><![CDATA[Peinau]]></displayName>
-    <version><![CDATA[1.0.0-beta.5]]></version>
-    <description><![CDATA[Paga con Peinau usando tu tarjeta de cr&eacute;dito favorita!]]></description>
-    <author><![CDATA[Peinau]]></author>
-    <tab><![CDATA[payments_gateways]]></tab>
+	<name>peinau</name>
+	<displayName><![CDATA[Peinau]]></displayName>
+	<version><![CDATA[1.0.0-beta.5]]></version>
+	<description><![CDATA[Paga con Peinau usando tu tarjeta de cr&eacute;dito favorita!]]></description>
+	<author><![CDATA[Peinau]]></author>
+	<tab><![CDATA[payments_gateways]]></tab>
 	<confirmUninstall><![CDATA[Estás seguro que quieres desinstalar el módulo?]]></confirmUninstall>
-    <is_configurable>1</is_configurable>
-    <need_instance>1</need_instance>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
 	<limited_countries></limited_countries>
 </module>

@@ -65,3 +65,18 @@
 	</div>
 </div>
 {/if}
+
+{if $payment_ex == 1}
+<div class="row">
+	<div class="col-xs-12">
+		<p class="payment_module" id="peinau_express_payment_button">
+			<a id="express" class="peinau" href="{$link->getModuleLink('peinau', 'redirect', ["payment_method"=>"EXPRESS"], true)|escape:'htmlall':'UTF-8'}" title="{l s='Pay with Express Checkout' mod='peinau'}">
+				{l s='Pay with Express Checkout'}
+				<span>
+					{l s='(using Peinau)'}
+				</span>
+			</a>
+		</p>
+	</div>
+</div>
+{/if}

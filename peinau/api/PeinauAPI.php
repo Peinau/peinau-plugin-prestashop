@@ -81,6 +81,15 @@ class PeinauAPI
         return $this->sendByCURL($url, null, $headers);
     }
 
+    public function postWithToken($url, $access_token) {
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer '.$access_token
+        );
+
+        return $this->sendByCURL($url, null, $headers, true);
+    }
+
     public function paymentIntent($id_type, $access_token, $transaction_detail) {
         $headers = array(
             'Content-Type: application/json',
@@ -102,14 +111,15 @@ class PeinauAPI
         return $this->sendByCURL($endpoint, $transaction_detail, $headers);
     }
 
-    public function sendByCURL($url, $body, $headers)
+
+    public function sendByCURL($url, $body, $headers, $post=false)
     {
         $ch = curl_init();
         if ($ch) {
 
             curl_setopt($ch, CURLOPT_URL, $url);
 
-            if ($body) {
+            if (($post)||($body)){
                 curl_setopt($ch, CURLOPT_POST, true);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
             }
@@ -236,6 +246,7 @@ class PeinauAPI
                 "return_url": "'.Context::getContext()->link->getModuleLink('peinau','confirmation').'",
                 "cancel_url": "'.Context::getContext()->link->getModuleLink('peinau','error').'"
             }
+            '.($capture_token ? ', "additional_attributes": {"capture_token": "'.$capture_token.'"}' : '').'
         }';
 
         return $transaction_detail;

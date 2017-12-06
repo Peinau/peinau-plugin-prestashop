@@ -42,3 +42,6 @@ p.payment_module a.peinau#cc {
 
 p.payment_module a.peinau#webpay {
     background: url(../img/webpay.png) 15px 31px no-repeat #fbfbfb; }
+
+p.payment_module a.peinau#express {
+    background: url(../img/cc.png) 15px 15px no-repeat #fbfbfb; }

@@ -47,6 +47,9 @@ Antes de ocupar el módulo, debes configurar lo esencial para que funcione corre
 - Debería el pago con WebPay estar habilitado?: 
 	- Descripción: Permite activar o desactivar el pago con Pago con WebPay.
 	- Estados: Habilitado / Deshabilitado
+- Debería el pago con Express Checkout estar habilitado?: 
+	- Descripción: Permite activar o desactivar el pago con Pago con Express Checkout.
+	- Estados: Habilitado / Deshabilitado
 
 
 ## Desarrollo

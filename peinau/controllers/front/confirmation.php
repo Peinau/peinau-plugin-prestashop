@@ -73,47 +73,7 @@ class PeinauConfirmationModuleFrontController extends ModuleFrontController
         if ($jsonRIntent->state == "canceled") {
             return $this->displayError('El pago ha sido anulado');
         } else if ($jsonRIntent->state == "paid") {
-            $cart_id=Context::getContext()->cart->id;
-            $secure_key=Context::getContext()->customer->secure_key;
-
-            $cart = new Cart((int)$cart_id);
-            $customer = new Customer((int)$cart->id_customer);
-
-            /**
-             * Since it's an example we are validating the order right here,
-             * You should not do it this way in your own module.
-             */
-            $payment_status = Configuration::get('PS_OS_PAYMENT'); // Default value for a payment that succeed.
-            $message = null; // You can add a comment directly into the order so the merchant will see it in the BO.
-
-            /**
-             * Converting cart into a valid order
-             */
-
-            $module_name = $this->module->displayName;
-            $currency_id = (int)Context::getContext()->currency->id;
-
-            $this->module->validateOrder($cart_id, $payment_status, $cart->getOrderTotal(), $module_name, $message, array(), $currency_id, false, $secure_key);
-
-            /**
-             * If the order has been validated we try to retrieve it
-             */
-            $order_id = Order::getOrderByCartId((int)$cart->id);
-
-            if ($order_id && ($secure_key == $customer->secure_key)) {
-                /**
-                 * The order has been placed so we redirect the customer on the confirmation page.
-                 */
-
-                $module_id = $this->module->id;
-                Tools::redirect('index.php?controller=order-confirmation&id_cart='.$cart_id.'&id_module='.$module_id.'&id_order='.$order_id.'&key='.$secure_key);
-            } else {
-                /**
-                 * An error occured and is shown on a new page.
-                 */
-                $this->errors[] = $this->module->l('An error occurred while trying to make the payment');
-                return $this->setTemplate('error.tpl');
-            }
+            $this->paid();
         } else if ($jsonRIntent->state == "captured") {
             $access_token = Context::getContext()->cookie->access_token;
             $cart = Context::getContext()->cart;
@@ -136,7 +96,83 @@ class PeinauConfirmationModuleFrontController extends ModuleFrontController
             if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
                 PrestaShopLogger::addLog("Redirect to : " . $jsonRIntent->links[1]->href);
             }
-            Tools::redirect($jsonRIntent->links[1]->href);
+
+            $silent_url = $jsonRIntent->links[3]->href;
+
+            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+                PrestaShopLogger::addLog("Silent charge url : " . $silent_url);
+            }
+
+            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+                PrestaShopLogger::addLog("JWT Token : " . $access_token);
+            }
+
+            $response = $peinauapi->postWithToken($silent_url, $access_token);
+
+            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
+                PrestaShopLogger::addLog("Silent charge resp : " . $response);
+            }
+
+            $jsonRIntent = Tools::jsonDecode($response);
+            if ($jsonRIntent->state == "paid") {
+                $this->paid();
+            } else {
+                /**
+                 * An error occured and is shown on a new page.
+                 */
+                $this->errors[] = $this->module->l('An error occurred while trying to make the payment');
+                return $this->setTemplate('error.tpl');
+            };
+        } else {
+            /**
+             * An error occured and is shown on a new page.
+             */
+            $this->errors[] = $this->module->l('An error occurred while trying to make the payment');
+            return $this->setTemplate('error.tpl');
+        }
+    }
+
+    protected function paid(){
+        $cart_id=Context::getContext()->cart->id;
+        $secure_key=Context::getContext()->customer->secure_key;
+
+        $cart = new Cart((int)$cart_id);
+        $customer = new Customer((int)$cart->id_customer);
+
+        /**
+         * Since it's an example we are validating the order right here,
+         * You should not do it this way in your own module.
+         */
+        $payment_status = Configuration::get('PS_OS_PAYMENT'); // Default value for a payment that succeed.
+        $message = null; // You can add a comment directly into the order so the merchant will see it in the BO.
+
+        /**
+         * Converting cart into a valid order
+         */
+
+        $module_name = $this->module->displayName;
+        $currency_id = (int)Context::getContext()->currency->id;
+
+        $this->module->validateOrder($cart_id, $payment_status, $cart->getOrderTotal(), $module_name, $message, array(), $currency_id, false, $secure_key);
+
+        /**
+         * If the order has been validated we try to retrieve it
+         */
+        $order_id = Order::getOrderByCartId((int)$cart->id);
+
+        if ($order_id && ($secure_key == $customer->secure_key)) {
+            /**
+             * The order has been placed so we redirect the customer on the confirmation page.
+             */
+
+            $module_id = $this->module->id;
+            Tools::redirect('index.php?controller=order-confirmation&id_cart='.$cart_id.'&id_module='.$module_id.'&id_order='.$order_id.'&key='.$secure_key);
+        } else {
+            /**
+             * An error occured and is shown on a new page.
+             */
+            $this->errors[] = $this->module->l('An error occurred while trying to make the payment');
+            return $this->setTemplate('error.tpl');
         }
     }
 

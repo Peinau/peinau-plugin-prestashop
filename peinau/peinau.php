@@ -61,6 +61,7 @@ class Peinau extends PaymentModule
         $iso_code = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
 
         Configuration::updateValue("PEINAU_PAYMENT_CMR", 1);
+        Configuration::updateValue("PEINAU_PAYMENT_EXPRESS", 1);
         Configuration::updateValue("PEINAU_PAYMENT_CC", 1);
         Configuration::updateValue("PEINAU_PAYMENT_WEBPAY", 1);
         Configuration::updateValue("PEINAU_DEBUG_MODE", 1);
@@ -80,6 +81,7 @@ class Peinau extends PaymentModule
         Configuration::deleteByName('PEINAU_IDENTIFIER');
         Configuration::deleteByName('PEINAU_SECRET_KEY');
         Configuration::deleteByName('PEINAU_PAYMENT_CMR');
+        Configuration::deleteByName('PEINAU_PAYMENT_EXPRESS');
         Configuration::deleteByName('PEINAU_PAYMENT_CC');
         Configuration::deleteByName('PEINAU_PAYMENT_WEBPAY');
         Configuration::deleteByName('PEINAU_ENDPOINT_URL');
@@ -234,6 +236,25 @@ class Peinau extends PaymentModule
                           ),
                         'label' => $this->l('Should WebPay Payment be active?'),
                         ),
+                        array(
+                            'type' => 'radio',
+                            'is_bool' => true,
+                            'desc' => $this->l('Express Payment'),
+                            'name' => 'PEINAU_PAYMENT_EXPRESS',
+                            'values' => array(
+                                array(
+                                  'id' => 'active_on',
+                                  'value' => 1,
+                                  'label' => $this->l('Enabled')
+                                ),
+                                array(
+                                  'id' => 'active_off',
+                                  'value' => 0,
+                                  'label' => $this->l('Disabled')
+                                )
+                              ),
+                            'label' => $this->l('Should Express Checkout be active?'),
+                            ),
                     array(
                         'type' => 'radio',
                         'is_bool' => true,
@@ -272,6 +293,7 @@ class Peinau extends PaymentModule
             'PEINAU_PAYMENT_CMR' => Configuration::get('PEINAU_PAYMENT_CMR'),
             'PEINAU_PAYMENT_CC' => Configuration::get('PEINAU_PAYMENT_CC'),
             'PEINAU_PAYMENT_WEBPAY' => Configuration::get('PEINAU_PAYMENT_WEBPAY'),
+            'PEINAU_PAYMENT_EXPRESS' => Configuration::get('PEINAU_PAYMENT_EXPRESS'),
             'PEINAU_DEBUG_MODE' => Configuration::get('PEINAU_DEBUG_MODE'),
 
             'PEINAU_IDENTIFIER' => Configuration::get('PEINAU_IDENTIFIER'),
@@ -312,6 +334,7 @@ class Peinau extends PaymentModule
                             'payment_cmr' => Configuration::get('PEINAU_PAYMENT_CMR'),
                             'payment_cc' => Configuration::get('PEINAU_PAYMENT_CC'),
                             'payment_wp' => Configuration::get('PEINAU_PAYMENT_WEBPAY'),
+                            'payment_ex' => Configuration::get('PEINAU_PAYMENT_EXPRESS'),
                             )
                         );
 
@@ -392,6 +415,18 @@ class Peinau extends PaymentModule
             $WPOption->setCallToActionText($this->l('Pay with WebPay').' '.$this->l('(using Peinau)'))
             ->setAction($paymentController)
             ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/webpay_small.png'));
+
+            array_push($payments, $WPOption);
+        }
+
+        if (Configuration::get('PEINAU_PAYMENT_EXPRESS') == 1) {
+            $WPOption = new $dynPaymentOption;
+
+            $paymentController = $this->context->link->getModuleLink(
+            $this->name,'redirect',["payment_method"=>"EXPRESS"] ,true);
+            $WPOption->setCallToActionText($this->l('Pay with Express Checkout').' '.$this->l('(using Peinau)'))
+            ->setAction($paymentController)
+            ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/cc_small.png'));
 
             array_push($payments, $WPOption);
         }

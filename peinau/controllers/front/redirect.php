@@ -75,6 +75,10 @@ class PeinauRedirectModuleFrontController extends ModuleFrontController
                 $payment_method = "QUICKPAY_CREDIT";
             }
 
+            if ($payment_method_attr == "EXPRESS") {
+                $payment_method = "QUICKPAY_TOKEN";
+            }
+
             $transaction_detail = PeinauAPI::createTransactionReq($cart, $payment_method);
 
             if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
