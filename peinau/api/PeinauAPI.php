@@ -152,7 +152,7 @@ class PeinauAPI
             "capture": "CREDIT_CARD",
             "capture_method": "TOKENIZATION",
             "cardholder": {
-            "reference_id": "Merchant_id_reference",
+            "reference_id": "'.$cartId.'",
             "name": "'.$customer->firstname.' '.$customer->lastname.'",
             "email": "'.$customer->email.'",
             "country": "'.$country->iso_code.'"
