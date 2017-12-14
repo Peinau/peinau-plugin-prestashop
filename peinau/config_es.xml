@@ -2,7 +2,7 @@
 <module>
 	<name>peinau</name>
 	<displayName><![CDATA[Peinau]]></displayName>
-	<version><![CDATA[1.0.0-beta.6]]></version>
+	<version><![CDATA[1.0.0-beta.7]]></version>
 	<description><![CDATA[Paga con Peinau usando tu tarjeta de cr&eacute;dito favorita!]]></description>
 	<author><![CDATA[Peinau]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
