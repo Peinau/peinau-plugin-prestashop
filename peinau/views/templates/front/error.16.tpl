@@ -22,12 +22,16 @@
  *}
 
 <div>
-	<h3>{l s='An error occurred' mod='peinau'}:</h3>
-	<ul class="alert alert-danger">
-		{foreach from=$peinauerrors item='error'}
-			<li>{$error|escape:'htmlall':'UTF-8'}.</li>
-		{/foreach}
-	</ul>
+	<h1 align="center" style="color: orange;">Tu compra no pudo ser realizada</h1>
+    <br/>
+	
+	<p>Las posibles causas de este rechazon son:</p>
+    <ul> 
+		<li>- Error en el ingreso de los datos de tu tarjeta (fecha y/o código de seguridad)</li>
+		<li>- Tu tarjeta no cuenta con saldo suficiente</li>
+		<li>- Tarjeta aún no habilitada en el sistema financiero</li>
+    </ul>
+
 </div>
 
 <a href="{$link->getPageLink('order', null, null, 'step=3')}">{l s='Go back and try again' mod='peinau'}</a>

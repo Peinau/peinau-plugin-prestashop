@@ -73,6 +73,7 @@ class PeinauConfirmationModuleFrontController extends ModuleFrontController
         if ($jsonRIntent->state == "canceled") {
             return $this->displayError('El pago ha sido anulado');
         } else if ($jsonRIntent->state == "paid") {
+            Context::getContext()->cookie->__set('payment', Tools::jsonEncode($jsonRIntent->gateway->resume));
             $this->paid();
         } else if ($jsonRIntent->state == "captured") {
             $access_token = Context::getContext()->cookie->access_token;
@@ -93,10 +94,6 @@ class PeinauConfirmationModuleFrontController extends ModuleFrontController
 
             Context::getContext()->cookie->__set('selfurl', $jsonRIntent->links[0]->href);
 
-            if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
-                PrestaShopLogger::addLog("Redirect to : " . $jsonRIntent->links[1]->href);
-            }
-
             $silent_url = $jsonRIntent->links[3]->href;
 
             if (Configuration::get("PEINAU_DEBUG_MODE") == true) {
@@ -115,20 +112,19 @@ class PeinauConfirmationModuleFrontController extends ModuleFrontController
 
             $jsonRIntent = Tools::jsonDecode($response);
             if ($jsonRIntent->state == "paid") {
+                Context::getContext()->cookie->__set('payment', Tools::jsonEncode($jsonRIntent->gateway->resume));
                 $this->paid();
             } else {
                 /**
                  * An error occured and is shown on a new page.
                  */
-                $this->errors[] = $this->module->l('An error occurred while trying to make the payment');
-                return $this->setTemplate('error.tpl');
+                return $this->displayError('An error occurred while trying to make the payment');
             };
         } else {
             /**
              * An error occured and is shown on a new page.
              */
-            $this->errors[] = $this->module->l('An error occurred while trying to make the payment');
-            return $this->setTemplate('error.tpl');
+            return $this->displayError('An error occurred while trying to make the payment');
         }
     }
 
@@ -171,8 +167,7 @@ class PeinauConfirmationModuleFrontController extends ModuleFrontController
             /**
              * An error occured and is shown on a new page.
              */
-            $this->errors[] = $this->module->l('An error occurred while trying to make the payment');
-            return $this->setTemplate('error.tpl');
+            return $this->displayError('An error occurred while trying to make the payment');
         }
     }
 

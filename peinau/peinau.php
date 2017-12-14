@@ -69,6 +69,7 @@ class Peinau extends PaymentModule
 
 
         return parent::install() &&
+            $this->registerHook('displayOrderConfirmation') &&
             $this->registerHook('header') &&
             $this->registerHook('paymentOptions') &&
             $this->registerHook('payment') &&
@@ -373,6 +374,21 @@ class Peinau extends PaymentModule
         ));
 
         return $this->display(__FILE__, 'views/templates/hook/confirmation.tpl');
+    }
+
+    public function hookDisplayOrderConfirmation($params)
+    {
+        if (!$this->active) {
+            return;
+        }
+
+        $this->smarty->assign(array(
+            'payment' => Tools::jsonDecode(Context::getContext()->cookie->payment),
+            'name' => Configuration::get('PS_SHOP_NAME'),
+        ));
+
+
+        return $this->display(__FILE__, 'views/templates/hook/order-confirmation.tpl');
     }
 
     public function hookPaymentOptions($params)
