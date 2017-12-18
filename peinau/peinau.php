@@ -381,10 +381,29 @@ class Peinau extends PaymentModule
         if (!$this->active) {
             return;
         }
+        $payment = Tools::jsonDecode(Context::getContext()->cookie->payment);
+        $numero_cuotas = $payment->transaction->installments_number;
+        $transaction_type = $payment->transaction->type;
+        $tipo_transaccion = "Otro";
+
+        if ($transaction_type == "CREDIT") {
+            $tipo_transaccion = "Crédito";
+        } else if ($transaction_type= "DEBIT") {
+            $tipo_transaccion = "Débito";
+        }
+
+        $cuotas = -1;
+
+        if ($transaction_type == "CREDIT") {
+            $cuotas = ($numero_cuotas > 1 ? "En cuotas" : "Sin cuotas");
+        }
 
         $this->smarty->assign(array(
-            'payment' => Tools::jsonDecode(Context::getContext()->cookie->payment),
+            'payment' => $payment,
             'name' => Configuration::get('PS_SHOP_NAME'),
+            'params' => $params,
+            'tipo_transaccion' => $tipo_transaccion,
+            'cuotas' => $cuotas
         ));
 
 

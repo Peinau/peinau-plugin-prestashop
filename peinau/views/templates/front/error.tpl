@@ -27,7 +27,7 @@
 <div>
 	<h1 align="center" style="color: orange;">Tu compra no pudo ser realizada</h1>
     <br/>
-	
+	{if isset(Context::getContext()->cart)}<p>Orden de compra: <b>{Context::getContext()->cart->id}</b></p>{/if}
 	<p>Las posibles causas de este rechazon son:</p>
     <ul> 
 		<li>- Error en el ingreso de los datos de tu tarjeta (fecha y/o código de seguridad)</li>
